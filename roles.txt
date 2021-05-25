@@ -1,0 +1,15 @@
+********************* ANSIBLE ROLE ***************************
+1. Initialize: ansible-galaxy init __template__
+
+2. Roles run once:
+roles:
+  - foo
+  - abc
+  - foo
+
+3. Allow run more times:
+roles:
+  - foo
+  - foo
+
+  allow_duplciate: true

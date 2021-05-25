@@ -1,0 +1,8 @@
+Install packages using loop:
+- name: Install packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - gcc
+    - java

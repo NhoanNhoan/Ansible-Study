@@ -1,0 +1,46 @@
+************** ANSIBLE INVENTORY **************
+# Similar patterns
+- Numeric:
+    [webservers]
+    www[01:50].example.com
+
+- Alphabetic:
+    [webservers]
+    www-[a:f].example.com
+
+- Select the connection type and user on a per host basis
+    [webservers]
+    localhost           ansible_connection=local
+    www.example1.com    ansible_connection=ssh  ansible_user=user1
+    www.example2.com    ansible_connection=ssh  ansible_user=user2
+
+# Host variables:
+[webservers]
+host name=hello_world
+
+# Group variable: applied to an entire group
+- Naive method:
+    [webservers]
+    host1 proxy=proxy.webservers.example.com
+    host2 proxy=proxy.webservers.example.com
+
+- Brief method:
+    [webservers:vars]
+    proxy=proxy.webservers.example.com
+
+- Groups of groups:
+[loadbalancer]
+host1
+host2
+
+[database]
+host3
+host4
+
+[webservers:children]
+loadbalancer
+database
+
+-- variables for all
+[webservers:vars]
+httpMaxConn=5000

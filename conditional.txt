@@ -1,0 +1,57 @@
+1. Condition
+
+* Normal
+- tasks:
+  - name: Shut down Debian flavored systems
+    ansible.buitlin.command: /sbin/shutdown-t now
+    when: ansible_facts['os_family'] == "Debian"
+
+* Combine or statement:
+  when: (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "6") or
+        (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "7")
+
+* Multiple conditions(that is a logical and):
+when:
+  - ansible_facts['distribution'] == "CentOS"
+  - ansible_facts['distribution_major_version'] == "6"
+
+* a filter to ensure that Ansible reads the value as an integer:
+when: ansible_facts['os_family'] == "RedHat" and ansible_facts['lsb']['major_release'] | int >= 6
+
+2. Registered variables(Assign variable to value of earlier task):
+# Keyword: register
+tasks:
+
+    - name: Register a variable
+      ansible.builtin.shell: cat /etc/motd
+      register: motd_contents
+
+    - name: Use the variable in condition statement
+      ansible.builtin.shell: echo "motd contains the word hi"
+      when: motd_contents.stdout.find('hi) != -1
+
+* List as variable:
+# If the variable is not a list, can convert it into a list, with either stdout_lines or with variable.stdout.split()
+
+- name: Retrieve the list of home directories
+  ansible.builtin.command: ls /home
+  register: home_dirs
+
+- name: Add home dirs to the backup spooler\
+  ansible.builtin.file:
+    path: /mnt/bkspool/{{ item }}m
+    src: /home/{{ item }}
+    state: link
+ loop: "{{ home_dirs.stdout_lines }}"
+ # same as loop: "{{ home_dirs.stdout.split() }}
+
+ * Check empty
+ - name: List contents of directory
+   ansible.builtin.command: ls mydir
+   register: contents
+
+- name: Check contents for emptiness
+  ansible.builtin.debug:
+    msg: "Directory is empty"
+  when: contents.stdout == ""
+  

@@ -1,0 +1,5 @@
+- Handler is special task that only get executed when triggered via the notify directive.
+- Handlers are executed at the end of the play, once all task are finished.
+- Handlers area typically used to start, reload, restart, and stop services.
+- A handler is notified multiple times, the tasks under handler will only run once.
+- If two handlers have the same name, only the one will run. Which is defined later in playbook.
